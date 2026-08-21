@@ -1,3 +1,11 @@
+% -------------------------------------------------------------------------
+% artworkfcn.m
+%
+% Defines the helper functions shared by autoart.m, randart.m, and
+% collectResultsPaper.m, and injects them into the caller workspace with
+% assignin. Each script that uses these functions must call artworkfcn;
+% once, before calling any of them.
+% -------------------------------------------------------------------------
 function artworkfcn
 
 getfromfile = @(filename,varname) getfield(load(filename,varname),varname);
@@ -20,13 +28,14 @@ assignin('caller','mutationfliplr',@mutationfliplr);
 
 end
 % -------------------------------------------------------------------------
-%
+% Reads the 306 raw tile PNGs from rawimgdir, builds the 26 binary
+% primitive masks, and builds the table of 2x2 primitive patterns.
 % -------------------------------------------------------------------------
 function [IMGTC,IMGIND,IMGBIN,PRIM,PATT,Pr_PRIM,I_PRIM] = genRawData(rawimgdir)
 
 nfigs = 306;
-nrowfig = 520; % Number of cols per image
-ncolfig = 590; % Number of rows per image
+nrowfig = 520; % Number of rows per image
+ncolfig = 590; % Number of cols per image
 nprim = 26;
 filelist = struct2cell(dir([rawimgdir '*.png']))';
 filelist = filelist(:,1);
@@ -109,7 +118,8 @@ PATT = permute(PATT,[2 1 3]);
 
 end
 % -------------------------------------------------------------------------
-%
+% Cost function dispatcher. Computes one of six order/disorder measures
+% for the layout X, selected by the global fcntype (1-6, see README.md).
 % -------------------------------------------------------------------------
 function J = costGLOBAL(X)
 
@@ -201,7 +211,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Joint entropy between the touching edge of tile A and tile B, used by
+% cost function type 4. Rotates both tiles 90 degrees first if dorot.
 % -------------------------------------------------------------------------
 function J = costEDGE(A,B,dorot)
 
@@ -226,7 +237,8 @@ J = -sum(P);
 
 end
 % -------------------------------------------------------------------------
-%
+% Joint entropy between all foreground pixels of tile A and tile B, used
+% by cost function type 3.
 % -------------------------------------------------------------------------
 function J = costLOCAL(A,B)
 
@@ -245,7 +257,7 @@ J = -sum(P);
 
 end
 % -------------------------------------------------------------------------
-%
+% Renders layout X as an 18x17 true-color mosaic image.
 % -------------------------------------------------------------------------
 function CIMG = rendercolor(X)
 
@@ -272,7 +284,7 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Renders layout X as an 18x17 indexed-color mosaic image.
 % -------------------------------------------------------------------------
 function CIMG = renderindexed(X)
 
@@ -299,7 +311,9 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Renders layout X as an 18x17 binary mosaic image: the tile foreground
+% masks if flag is true, or the matching primitive masks if flag is
+% false.
 % -------------------------------------------------------------------------
 function CIMG = renderbinary(X,flag)
 
@@ -335,7 +349,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Local search move: swaps two randomly chosen tiles. Keeps the swap only
+% if it improves the cost.
 % -------------------------------------------------------------------------
 function [X,J] = mutationrndswap(X,J,minmax)
 
@@ -359,7 +374,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Local search move: swaps a randomly chosen tile with its left neighbor.
+% Keeps the swap only if it improves the cost.
 % -------------------------------------------------------------------------
 function [X,J] = mutationlswap(X,J,minmax)
 
@@ -388,7 +404,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Local search move: swaps a randomly chosen tile with its right
+% neighbor. Keeps the swap only if it improves the cost.
 % -------------------------------------------------------------------------
 function [X,J] = mutationrswap(X,J,minmax)
 
@@ -417,7 +434,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Local search move: swaps a randomly chosen tile with its top neighbor.
+% Keeps the swap only if it improves the cost.
 % -------------------------------------------------------------------------
 function [X,J] = mutationtswap(X,J,minmax)
 
@@ -446,7 +464,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Local search move: swaps a randomly chosen tile with its bottom
+% neighbor. Keeps the swap only if it improves the cost.
 % -------------------------------------------------------------------------
 function [X,J] = mutationbswap(X,J,minmax)
 
@@ -475,7 +494,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Local search move: flips a randomly chosen tile image upside down.
+% Keeps the flip only if it improves the cost.
 % -------------------------------------------------------------------------
 function [X,J] = mutationflipud(X,J,minmax)
 
@@ -509,7 +529,8 @@ end
 
 end
 % -------------------------------------------------------------------------
-%
+% Local search move: flips a randomly chosen tile image left-right.
+% Keeps the flip only if it improves the cost.
 % -------------------------------------------------------------------------
 function [X,J] = mutationfliplr(X,J,minmax)
 

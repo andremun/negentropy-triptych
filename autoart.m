@@ -1,5 +1,24 @@
 % -------------------------------------------------------------------------
 % autoart.m
+%
+% Runs a local search that arranges the 306 tile images into an 18x17
+% mosaic layout, optimizing one of six visual order/disorder cost
+% functions (see costGLOBAL in artworkfcn.m). Starts from the layout
+% stored in data/poster_idx.mat and applies nswaps local search moves,
+% keeping each move only when it improves the cost.
+%
+% Inputs:
+%   nseed  - integer 1-100, selects one of 100 fixed random seeds
+%   ftype  - cost function type, 1-6 (see README.md)
+%   minmax - true to maximize the cost function, false to minimize it
+%   nswaps - number of local search iterations
+%
+% Reads data/raw_image_data.mat (rebuilt from raw PNGs if missing; see
+% README.md) and data/poster_idx.mat.
+%
+% Writes the final mosaic image to data/images/ and the layout, cost
+% trace, and mutation-operator usage counts to data/autoresults/. Both
+% folders must exist before this function runs; it does not create them.
 % -------------------------------------------------------------------------
 function autoart(nseed,ftype,minmax,nswaps)
 
@@ -18,8 +37,8 @@ I = I(:,3);
 nfigs = length(I);
 nimgrow = 18; % Number of images per row
 nimgcol = 17; % Number of images per col
-nrowfig = 520; % Number of cols per image
-ncolfig = 590; % Number of rows per image
+nrowfig = 520; % Number of rows per image
+ncolfig = 590; % Number of cols per image
 Nrow = nimgrow*nrowfig; % Number of rows in the final figure
 Ncol = nimgcol*ncolfig; % Number of cols in the final figure
 X = reshape(I,nimgrow,nimgcol);

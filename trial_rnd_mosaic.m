@@ -1,3 +1,18 @@
+% -------------------------------------------------------------------------
+% trial_rnd_mosaic.m
+%
+% SLURM array-job wrapper that evaluates cost function type 4 (the "E0"
+% edge-entropy baseline) on a 1000-layout slice of a pre-generated set of
+% 1e6 random layouts, selected by the array task ID.
+%
+% Calls test_random_mosaics_clust, a function not included in this
+% repository. See README.md, "Known limitations".
+%
+% Reads ./autoart_1e6_cost/img_idx_1e6.mat and
+% ./autoart_1e6_cost/result_gen_rand_mosaics_E0.mat, neither of which is
+% included in this repository. Writes one
+% ./autoart_1e6_cost/result_gen_rand_mosaics_TID<n>.mat file per task ID.
+% -------------------------------------------------------------------------
 tid = str2double(getenv('SLURM_ARRAY_TASK_ID'));
 disp(['Trial number: ' num2str(tid)]);
 

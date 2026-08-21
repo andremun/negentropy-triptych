@@ -1,5 +1,20 @@
 % -------------------------------------------------------------------------
-% autoart.m
+% randart.m
+%
+% Evaluates the cost function type 6 (primitive pattern match) on a set
+% of pre-generated random layouts, used as the random baseline against
+% which the optimized layouts from autoart.m are compared.
+%
+% Inputs:
+%   idx - matrix of layouts, one 306-element layout per column
+%   J   - matrix of cost values to fill in; an entry already set (not
+%         NaN) is left unchanged and skipped
+%
+% Output:
+%   J - the input matrix, with row 6 filled in for every column that was
+%       still NaN
+%
+% Reads data/raw_image_data.mat.
 % -------------------------------------------------------------------------
 function J = randart(idx,J)
 
@@ -13,8 +28,8 @@ warning('off','images:initSize:adjustingMag');
 artworkfcn;
 
 [nfigs,ntries] = size(idx);
-nrowfig = 520; % Number of cols per image
-ncolfig = 590; % Number of rows per image
+nrowfig = 520; % Number of rows per image
+ncolfig = 590; % Number of cols per image
 nimgrow = 18; % Number of images per row
 nimgcol = 17; % Number of images per col
 Nrow = nimgrow*nrowfig; % Number of rows in the final figure

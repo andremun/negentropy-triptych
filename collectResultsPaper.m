@@ -1,3 +1,21 @@
+% -------------------------------------------------------------------------
+% collectResultsPaper.m
+%
+% Script, run cell by cell, that loads the results of the autoart.m local
+% search runs and the randart.m random baseline, and produces the figures
+% used in Smith-Miles and Munoz (2022) [1]: the Negentropy Triptych, the
+% primitive and pattern illustrations, the extreme-cost mosaics, and the
+% cost distribution histograms. Saves each figure as a PNG to
+% data/images/.
+%
+% Requires data/raw_image_data.mat, data/result_triptych.mat, and the
+% .mat files written by autoart.m to data/autoresults/. The random and
+% optimized baselines (data/result_randart.mat, data/result_autoart.mat)
+% are rebuilt if missing, which calls randart.m with a three-argument
+% signature that the randart.m in this repository does not have; see the
+% "Known limitations" section of README.md.
+% -------------------------------------------------------------------------
+
 %% Setting up the environment
 global IMGTC IMGBIN IMGIND PRIM PATT Pr_PRIM I_PRIM
 
@@ -6,8 +24,8 @@ datadir = './data/';
 imagedir = [datadir 'images/'];
 nimgrow = 18; % Number of images per row
 nimgcol = 17; % Number of images per col
-nrowfig = 520; % Number of cols per image
-ncolfig = 590; % Number of rows per image
+nrowfig = 520; % Number of rows per image
+ncolfig = 590; % Number of cols per image
 nfigs = 306;
 
 IMGTC = getfromfile([datadir 'raw_image_data.mat'],'IMGTC');
