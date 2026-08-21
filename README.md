@@ -20,10 +20,9 @@ https://www.unimelb.edu.au/shop/melbourne-story/aoa-gift-range
 
 - Podcast: "The algorithms of art", University of Melbourne Pursuit.
   https://pursuit.unimelb.edu.au/podcasts/the-algorithms-of-art
-- Video, likely the public lecture "When mathematics becomes art - the
-  unexpected beauty of self-evolving mathematical functions" listed
-  alongside the podcast above (title inferred, not confirmed against the
-  video itself): https://www.youtube.com/watch?v=n4pw8FmEZ40
+- Public lecture: "When mathematics becomes art - the unexpected beauty
+  of self-evolving mathematical functions".
+  https://www.youtube.com/watch?v=n4pw8FmEZ40
 
 ## Background
 
