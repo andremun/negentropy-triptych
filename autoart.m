@@ -13,8 +13,10 @@
 %   minmax - true to maximize the cost function, false to minimize it
 %   nswaps - number of local search iterations
 %
-% Reads data/raw_image_data.mat (rebuilt from raw PNGs if missing; see
-% README.md) and data/poster_idx.mat.
+% Reads data/raw_image_data.mat. If it is missing, rebuilds it from the
+% 306 raw tile PNGs in data/raw_images/, downloading them first with
+% downloadRawImages.m if that folder is missing or empty (see README.md).
+% Also reads data/poster_idx.mat.
 %
 % Writes the final mosaic image to data/images/ and the layout, cost
 % trace, and mutation-operator usage counts to data/autoresults/. Both
@@ -56,7 +58,10 @@ if exist([datadir 'raw_image_data.mat'],'file')==2
     Pr_PRIM = getfromfile([datadir 'raw_image_data.mat'],'Pr_PRIM');
     I_PRIM = getfromfile([datadir 'raw_image_data.mat'],'I_PRIM');
 else
-    rawimgdir = 'C:\Users\mariom1\OneDrive - The University of Melbourne\Documents\Research Files\Posters\NewBBOBInstances\';
+    rawimgdir = [datadir 'raw_images/'];
+    if ~exist(rawimgdir,'dir') || isempty(dir([rawimgdir '*.png']))
+        downloadRawImages(rawimgdir);
+    end
     [IMGTC,IMGIND,IMGBIN,PRIM,PATT,Pr_PRIM,I_PRIM] = genRawData(rawimgdir);
     save([datadir 'raw_image_data.mat'],'IMGTC','IMGIND','IMGBIN','PRIM','PATT','Pr_PRIM','I_PRIM');
 end

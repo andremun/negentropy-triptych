@@ -16,9 +16,6 @@ iid = [XX(:) YY(:) ZZ(:)];
 tid = str2double(tid);
 nseed = iid(tid,1);
 ftype = iid(tid,2);
-minmax = iid(tid,2)==1; % NOTE: always false, since ftype is 2, 5, or 6;
-                        % this looks like it should read iid(tid,3)==1
-                        % (the search-direction column). See README.md,
-                        % "Known limitations".
+minmax = iid(tid,3)==1;
 nswaps = 1e4;
 autoart(nseed,ftype,minmax,nswaps);
