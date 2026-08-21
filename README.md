@@ -49,19 +49,20 @@ function.
 
 ```
 autoart/
-  autoart.m               Local search that optimizes one mosaic layout
-  randart.m                Evaluates the cost function on random layouts
-  artworkfcn.m              Shared helper functions (see below)
-  downloadRawImages.m        Fetches the 306 tile PNGs from figshare
-  kdpee.m / kdpeemex.mexw64  Third-party k-d partitioning entropy estimator
-  collectResultsPaper.m    Post-processing script that builds the paper figures
-  trial_autoart.m          SLURM array-job wrapper around autoart.m
-  trial_rnd_mosaic.m       SLURM array-job wrapper for random-mosaic evaluation
-  data/
-    poster_idx.mat         Starting layouts used for the printed poster
-    raw_image_data.mat     Cached tile images, binary masks, and primitive data
-    result_triptych.mat    Layouts and cost values for the published triptych
-    raw_images/             306 raw tile PNGs (not committed; see Data below)
+├── autoart.m               Local search that optimizes one mosaic layout
+├── randart.m                Evaluates the cost function on random layouts
+├── artworkfcn.m              Shared helper functions (see below)
+├── downloadRawImages.m        Fetches the 306 tile PNGs from figshare
+├── kdpee.m                    Third-party k-d partitioning entropy estimator
+├── kdpeemex.mexw64            Compiled MEX binary kdpee.m calls (Windows only)
+├── collectResultsPaper.m  Post-processing script that builds the paper figures
+├── trial_autoart.m        SLURM array-job wrapper around autoart.m
+├── trial_rnd_mosaic.m     SLURM array-job wrapper for random-mosaic evaluation
+└── data/
+    ├── poster_idx.mat        Starting layouts used for the printed poster
+    ├── raw_image_data.mat    Cached tile images, binary masks, and primitive data
+    ├── result_triptych.mat   Layouts and cost values for the published triptych
+    └── raw_images/           306 raw tile PNGs (not committed; see Data below)
 ```
 
 `artworkfcn.m` is not called directly. It defines all the functions the
@@ -185,39 +186,6 @@ search direction, so the 60-job array covers all 10 seeds x 3 cost
 function types x 2 search directions as intended. No `data/autoresults/`
 files exist in this repository yet, so this change does not invalidate
 any committed result.
-
-## Files to source from your own archive
-
-Two parts of this repository depend on files that are specific to a
-large-scale, 1e6-layout random-mosaic experiment. They are not part of
-the 306-image figshare dataset [3], so they cannot be fetched the same
-way. If you have them from the original project, add them at the paths
-below. Otherwise, treat the scripts that need them as not runnable yet.
-
-- `trial_rnd_mosaic.m` calls a function named `test_random_mosaics_clust`
-  and reads `./autoart_1e6_cost/img_idx_1e6.mat` and
-  `./autoart_1e6_cost/result_gen_rand_mosaics_E0.mat`. None of the three
-  are in this repository. Add `test_random_mosaics_clust.m` to the
-  repository root, and the two `.mat` files under `autoart_1e6_cost/`.
-- `collectResultsPaper.m` loads `data/result_randart.mat` if present. If
-  it is absent, it falls back to a code path that calls `randart` with
-  three arguments (`datadir`, `idx`, `J`), while the `randart.m` in this
-  repository accepts only two (`idx`, `J`). This is not something to
-  guess a fix for, since it would silently change a result the paper's
-  figures depend on. Instead:
-  - If you have `result_randart.mat` from the original project, add it
-    to `data/`. This skips the broken fallback entirely.
-  - If not, and you have the older `randart.m` with the three-argument
-    signature, add it (for example as `randartLegacy.m`, so it does not
-    overwrite the `randart.m` that `autoart.m` also uses) and update the
-    call in `collectResultsPaper.m` to use it.
-- `data/result_autoart.mat` is also loaded by `collectResultsPaper.m` if
-  present. Unlike the two files above, it does not require a missing
-  function: if absent, the script rebuilds it from
-  `data/autoresults/result_S*_E*_M*.mat`, the files `autoart.m` writes.
-  Run `autoart.m` (or the `trial_autoart.m` SLURM array, 60 combinations)
-  to completion first, or add `data/result_autoart.mat` directly if you
-  have it archived.
 
 ## References
 
