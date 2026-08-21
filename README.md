@@ -16,6 +16,15 @@ These images also appear in the University of Melbourne's Algorithms of
 Art gift range:
 https://www.unimelb.edu.au/shop/melbourne-story/aoa-gift-range
 
+## Learn more
+
+- Podcast: "The algorithms of art", University of Melbourne Pursuit.
+  https://pursuit.unimelb.edu.au/podcasts/the-algorithms-of-art
+- Video, likely the public lecture "When mathematics becomes art - the
+  unexpected beauty of self-evolving mathematical functions" listed
+  alongside the podcast above (title inferred, not confirmed against the
+  video itself): https://www.youtube.com/watch?v=n4pw8FmEZ40
+
 ## Background
 
 Each test function landscape, rendered as a 2D contour plot, shows a
