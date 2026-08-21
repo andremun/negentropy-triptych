@@ -172,8 +172,8 @@ https://doi.org/10.1080/17513472.2022.2139663
 test instances for continuous black-box optimization. *Evolutionary
 Computation*, 28(3), 379-404. https://doi.org/10.1162/evco_a_00262
 
-[3] Image dataset associated with [2]: figshare.
-https://doi.org/10.6084/m9.figshare.13082474
+[3] Muñoz Acosta, M. A. (2026). Individual images without axes. figshare.
+Figure. https://doi.org/10.6084/m9.figshare.13082474
 
 [4] Stowell, D., & Plumbley, M. D. (2009). Fast multidimensional entropy
 estimation by k-d partitioning. *IEEE Signal Processing Letters*, 16(6),
