@@ -2,10 +2,10 @@
 % autoart.m
 %
 % Runs a local search that arranges the 306 tile images into an 18x17
-% mosaic layout, optimizing one of six visual order/disorder cost
-% functions (see costGLOBAL in artworkfcn.m). Starts from the layout
-% stored in data/poster_idx.mat and applies nswaps local search moves,
-% keeping each move only when it improves the cost.
+% mosaic layout. It optimizes one of six visual order/disorder cost
+% functions (see costGLOBAL in artworkfcn.m). It starts from the layout
+% in data/poster_idx.mat, and applies nswaps local search moves. It keeps
+% each move only when the move improves the cost.
 %
 % Inputs:
 %   nseed  - integer 1-100, selects one of 100 fixed random seeds
@@ -13,14 +13,15 @@
 %   minmax - true to maximize the cost function, false to minimize it
 %   nswaps - number of local search iterations
 %
-% Reads data/raw_image_data.mat. If it is missing, rebuilds it from the
-% 306 raw tile PNGs in data/raw_images/, downloading them first with
-% downloadRawImages.m if that folder is missing or empty (see README.md).
-% Also reads data/poster_idx.mat.
+% Reads data/raw_image_data.mat. If that file is missing, autoart.m
+% rebuilds it from the 306 raw tile PNGs in data/raw_images/. If that
+% folder is missing or empty, autoart.m downloads them first with
+% downloadRawImages.m (see README.md). Also reads data/poster_idx.mat.
 %
-% Writes the final mosaic image to data/images/ and the layout, cost
+% Writes the final mosaic image to data/images/. Writes the layout, cost
 % trace, and mutation-operator usage counts to data/autoresults/. Both
-% folders must exist before this function runs; it does not create them.
+% folders must exist before this function runs. This function does not
+% create them.
 % -------------------------------------------------------------------------
 function autoart(nseed,ftype,minmax,nswaps)
 

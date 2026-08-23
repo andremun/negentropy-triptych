@@ -1,18 +1,19 @@
 % -------------------------------------------------------------------------
 % randart.m
 %
-% Evaluates the cost function type 6 (primitive pattern match) on a set
-% of pre-generated random layouts, used as the random baseline against
-% which the optimized layouts from autoart.m are compared.
+% Evaluates cost function type 6 (primitive pattern match) on a set of
+% pre-generated random layouts. collectResultsPaper.m uses these values
+% as the random baseline. It compares this baseline against the
+% optimized layouts from autoart.m.
 %
 % Inputs:
 %   idx - matrix of layouts, one 306-element layout per column
-%   J   - matrix of cost values to fill in; an entry already set (not
-%         NaN) is left unchanged and skipped
+%   J   - matrix of cost values to fill in. randart leaves an entry
+%         already set (not NaN) unchanged, and skips it
 %
 % Output:
-%   J - the input matrix, with row 6 filled in for every column that was
-%       still NaN
+%   J - the input matrix. Row 6 now holds a value for every column that
+%       was still NaN
 %
 % Reads data/raw_image_data.mat.
 % -------------------------------------------------------------------------

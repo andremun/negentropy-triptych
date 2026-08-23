@@ -2,9 +2,9 @@
 % trial_autoart.m
 %
 % SLURM array-job wrapper around autoart.m. Reads the array task ID from
-% SLURM_ARRAY_TASK_ID and maps it to one (seed, cost function type,
-% minmax) combination, covering all 10 seeds x 3 cost function types x 2
-% search directions (60 combinations total).
+% SLURM_ARRAY_TASK_ID. Maps it to one (seed, cost function type, minmax)
+% combination. The 60 combinations cover all 10 seeds, 3 cost function
+% types, and 2 search directions.
 %
 % Run one job per task ID, for example: sbatch --array=1-60 <job script>
 % that calls this script.

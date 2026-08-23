@@ -2,10 +2,10 @@
 % downloadRawImages.m
 %
 % Downloads the 306 tile images from the figshare dataset in Munoz
-% Acosta (2026), "Individual images without axes" [3], and saves them as
-% PNG files in outdir. Called automatically by autoart.m the first time
-% data/raw_image_data.mat is missing and data/raw_images/ is empty; can
-% also be called directly to pre-populate that folder.
+% Acosta (2026), "Individual images without axes" [3]. Saves them as PNG
+% files in outdir. autoart.m calls this function automatically, the
+% first time data/raw_image_data.mat is missing and data/raw_images/ is
+% empty. Call it directly to pre-populate that folder ahead of time.
 %
 % Input:
 %   outdir - destination folder (default: 'data/raw_images/')
@@ -14,10 +14,9 @@
 % not need an API key for a published, public article. Needs internet
 % access and MATLAB's webread/websave (base MATLAB, no toolbox needed).
 %
-% This script could not be run inside the sandboxed environment that
-% wrote it, since that environment blocks outbound requests to figshare.
-% Test it once on a machine with normal internet access before relying
-% on it.
+% A sandboxed environment blocks outbound requests to figshare, so this
+% script has not run yet. Test it on a machine with normal internet
+% access before you rely on it.
 % -------------------------------------------------------------------------
 function downloadRawImages(outdir)
 

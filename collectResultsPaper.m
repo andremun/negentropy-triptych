@@ -2,21 +2,22 @@
 % collectResultsPaper.m
 %
 % Script, run cell by cell, that loads the results of the autoart.m local
-% search runs and the randart.m random baseline, and produces the figures
-% used in Smith-Miles and Munoz (2022) [1]: the Negentropy Triptych, the
+% search runs and the randart.m random baseline. Produces the figures for
+% Smith-Miles and Munoz (2022) [1]: the Negentropy Triptych, the
 % primitive and pattern illustrations, the extreme-cost mosaics, and the
 % cost distribution histograms. Saves each figure as a PNG to
 % data/images/.
 %
 % Requires data/raw_image_data.mat, data/result_triptych.mat, and the
-% .mat files written by autoart.m to data/autoresults/. The random and
-% optimized baselines (data/result_randart.mat, data/result_autoart.mat)
-% are rebuilt if missing, which calls randart.m with a three-argument
-% signature that the randart.m in this repository does not have; see the
-% "Known limitations" section of README.md.
+% .mat files autoart.m writes to data/autoresults/. If
+% data/result_randart.mat or data/result_autoart.mat is missing, this
+% script tries to rebuild it. Rebuilding data/result_randart.mat calls
+% randart.m with a three-argument signature that the randart.m in this
+% repository does not have. See
+% https://github.com/andremun/negentropy-triptych/issues/1 for details.
 % -------------------------------------------------------------------------
 
-%% Setting up the environment
+%% Set up the environment
 global IMGTC IMGBIN IMGIND PRIM PATT Pr_PRIM I_PRIM
 
 artworkfcn;
@@ -36,7 +37,7 @@ PATT = getfromfile([datadir 'raw_image_data.mat'],'PATT');
 Pr_PRIM = getfromfile([datadir 'raw_image_data.mat'],'Pr_PRIM');
 I_PRIM = getfromfile([datadir 'raw_image_data.mat'],'I_PRIM');
 
-%% Colect the data from the Artwork. Produce the necessary images
+%% Collect the data from the artwork and produce the necessary images
 Jnegtri = getfromfile([datadir 'result_triptych.mat'], 'Jnegtri');
 Inegtri =  getfromfile([datadir 'result_triptych.mat'], 'Inegtri');
 
@@ -83,7 +84,7 @@ for ii=1:4
 end
 print(gcf,'-dpng','-r600',[imagedir 'patterns.png']);
 
-%% Colect the data from the random generations. Produce the necessary images
+%% Collect the data from the random generations and produce the necessary images
 if exist([datadir 'result_randart.mat'],'file')
     Jrand = getfromfile([datadir 'result_randart.mat'],'J');
     Irand = getfromfile([datadir 'result_randart.mat'],'I');
@@ -117,7 +118,7 @@ end
 %     print(gcf,'-dpng','-r300',[imagedir 'extremes_randart_J' num2str(ii) '.png']);
 % end
 
-%% Collect the data from the optimized generations. Produce the necessary images
+%% Collect the data from the optimized generations and produce the necessary images
 if exist([datadir 'result_autoart.mat'],'file')
     Jopt = getfromfile([datadir 'result_autoart.mat'],'Jopt');
     Iopt = getfromfile([datadir 'result_autoart.mat'],'Iopt');

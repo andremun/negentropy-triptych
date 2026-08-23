@@ -2,9 +2,9 @@
 % artworkfcn.m
 %
 % Defines the helper functions shared by autoart.m, randart.m, and
-% collectResultsPaper.m, and injects them into the caller workspace with
-% assignin. Each script that uses these functions must call artworkfcn;
-% once, before calling any of them.
+% collectResultsPaper.m. Injects them into the caller workspace with
+% assignin. Each script that uses these functions must call artworkfcn
+% once, before it uses any of them.
 % -------------------------------------------------------------------------
 function artworkfcn
 
@@ -119,7 +119,8 @@ PATT = permute(PATT,[2 1 3]);
 end
 % -------------------------------------------------------------------------
 % Cost function dispatcher. Computes one of six order/disorder measures
-% for the layout X, selected by the global fcntype (1-6, see README.md).
+% for the layout X. The global fcntype (1-6, see README.md) selects
+% which measure runs.
 % -------------------------------------------------------------------------
 function J = costGLOBAL(X)
 
@@ -132,8 +133,8 @@ switch fcntype
         data(:,3) = IND(:);
         J = Hx + kdpee(data(1:2:end,3)) - kdpee(data(1:2:end,:));
     case 2
-        % Mutual information of the axes vs difference on intensity
-        % WORKS ON THE THREE FRAMES
+        % Mutual information of the axes vs difference on intensity.
+        % Works on all three color frames.
         L = del2(double(renderindexed(X))./(2.^16-1));
         data(:,3) = L(:);
         J = Hx + kdpee(data(1:2:end,3)) - kdpee(data(1:2:end,:));
@@ -144,16 +145,16 @@ switch fcntype
         for ii=1:nrows
             for jj=1:ncols
                 aux = NaN.*ones(4,1);
-                if jj>1 % The element has a left neighboor
+                if jj>1 % The element has a left neighbor
                     aux(1) = data(X(ii,jj), X(ii,jj-1));
                 end
-                if jj<ncols % The image has a right neighboor
+                if jj<ncols % The image has a right neighbor
                     aux(2) = data(X(ii,jj), X(ii,jj+1));
                 end
-                if ii>1 % The element has a top neighboor
+                if ii>1 % The element has a top neighbor
                     aux(3) = data(X(ii,jj), X(ii-1,jj));
                 end
-                if ii<nrows % The image has a bottom neighboor
+                if ii<nrows % The image has a bottom neighbor
                     aux(4) = data(X(ii,jj), X(ii+1,jj));
                 end
                 J(ii,jj) = nanmean(aux);
@@ -167,16 +168,16 @@ switch fcntype
         for ii=1:nrows
             for jj=1:ncols
                 aux = NaN.*ones(4,1);
-                if jj>1 % The element has a left neighboor
+                if jj>1 % The element has a left neighbor
                     aux(1) = data(X(ii,jj-1), X(ii,jj), 2);
                 end
-                if jj<ncols % The image has a right neighboor
+                if jj<ncols % The image has a right neighbor
                     aux(2) = data(X(ii,jj), X(ii,jj+1), 2);
                 end
-                if ii>1 % The element has a top neighboor
+                if ii>1 % The element has a top neighbor
                     aux(3) = data(X(ii-1,jj), X(ii,jj), 1);
                 end
-                if ii<nrows % The image has a bottom neighboor
+                if ii<nrows % The image has a bottom neighbor
                     aux(4) = data(X(ii,jj), X(ii+1,jj), 1);
                 end
                 J(ii,jj) = nanmean(aux);
@@ -184,11 +185,12 @@ switch fcntype
         end
         J = nanmean(J(:));
     case 5
-        % Connected area
-        % ORIGINAL AND DISORDERED ALMOST THE SAME
+        % Connected area.
+        % The original layout and a fully disordered layout score
+        % almost the same.
         BW = renderbinary(X,true);
         props = regionprops('table',bwareafilt(BW,1),'Area');
-        J = props.Area./numel(BW); % We maximize the connected area
+        J = props.Area./numel(BW); % Maximizes the connected area
     case 6
         [nrows,ncols] = size(X);
         Pr_mosaic = Pr_PRIM(X);
@@ -211,17 +213,18 @@ end
 
 end
 % -------------------------------------------------------------------------
-% Joint entropy between the touching edge of tile A and tile B, used by
-% cost function type 4. Rotates both tiles 90 degrees first if dorot.
+% Computes the joint entropy between the touching edge of tile A and
+% tile B. Cost function type 4 uses this measure. Rotates both tiles 90
+% degrees first if dorot.
 % -------------------------------------------------------------------------
 function J = costEDGE(A,B,dorot)
 
 global IMGBIN
 
-% Always assume that A is on the left and B on the right. This can be
-% generalized for top and bottom with a flag
-V_A = IMGBIN(:,:,A); % This is the figure in the left
-V_B = IMGBIN(:,:,B); % This is the figure in the right
+% Assumes A is on the left and B is on the right. You could generalize
+% this for top and bottom with a flag.
+V_A = IMGBIN(:,:,A); % This is the figure on the left
+V_B = IMGBIN(:,:,B); % This is the figure on the right
 if dorot
     V_A = rot90(V_A);
     V_B = rot90(V_B);
@@ -237,15 +240,15 @@ J = -sum(P);
 
 end
 % -------------------------------------------------------------------------
-% Joint entropy between all foreground pixels of tile A and tile B, used
-% by cost function type 3.
+% Computes the joint entropy between all foreground pixels of tile A and
+% tile B. Cost function type 3 uses this measure.
 % -------------------------------------------------------------------------
 function J = costLOCAL(A,B)
 
 global IMGBIN 
 
-V_A = IMGBIN(:,:,A); % This is the figure in the left
-V_B = IMGBIN(:,:,B); % This is the figure in the right
+V_A = IMGBIN(:,:,A); % This is the figure on the left
+V_B = IMGBIN(:,:,B); % This is the figure on the right
 P = zeros(1,4);
 P(1) = mean(~V_A(:) & ~V_B(:));
 P(2) = mean(~V_A(:) &  V_B(:));
@@ -311,9 +314,9 @@ end
 
 end
 % -------------------------------------------------------------------------
-% Renders layout X as an 18x17 binary mosaic image: the tile foreground
-% masks if flag is true, or the matching primitive masks if flag is
-% false.
+% Renders layout X as an 18x17 binary mosaic image. Uses the tile
+% foreground masks if flag is true, or the matching primitive masks if
+% flag is false.
 % -------------------------------------------------------------------------
 function CIMG = renderbinary(X,flag)
 
@@ -386,7 +389,7 @@ C = [row col  ];
 L = [row col-1];
 
 aux = X(C(1),C(2));
-if col>1 % The element has a left neighboor
+if col>1 % The element has a left neighbor
     X_L = X;
     X_L(C(1),C(2)) = X_L(L(1),L(2));
     X_L(L(1),L(2)) = aux;
@@ -416,11 +419,11 @@ C = [row col  ];
 R = [row col+1];
 
 aux = X(C(1),C(2));
-if col<ncols % The image has a right neighboor
+if col<ncols % The image has a right neighbor
     X_R = X;
     X_R(C(1),C(2)) = X_R(R(1),R(2));
     X_R(R(1),R(2)) = aux;
-    Jnew = costGLOBAL(X_R); % Global result of changing 
+    Jnew = costGLOBAL(X_R); % Global result of changing right
 elseif minmax
     Jnew = -Inf;
 else
@@ -446,7 +449,7 @@ C = [row col  ];
 T = [row-1 col];
 
 aux = X(C(1),C(2));
-if row>1 % The element has a top neighboor
+if row>1 % The element has a top neighbor
     X_T = X;
     X_T(C(1),C(2)) = X_T(T(1),T(2));
     X_T(T(1),T(2)) = aux;
@@ -476,7 +479,7 @@ C = [row col  ];
 B = [row+1 col];
 
 aux = X(C(1),C(2));
-if row<nrows % The image has a bottom neighboor
+if row<nrows % The image has a bottom neighbor
     X_B = X;
     X_B(C(1),C(2)) = X_B(B(1),B(2));
     X_B(B(1),B(2)) = aux;
