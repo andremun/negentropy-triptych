@@ -1,5 +1,27 @@
 % -------------------------------------------------------------------------
 % autoart.m
+%
+% Runs a local search that arranges the 306 tile images into an 18x17
+% mosaic layout. It optimizes one of six visual order/disorder cost
+% functions (see costGLOBAL in artworkfcn.m). It starts from the layout
+% in data/poster_idx.mat, and applies nswaps local search moves. It keeps
+% each move only when the move improves the cost.
+%
+% Inputs:
+%   nseed  - integer 1-100, selects one of 100 fixed random seeds
+%   ftype  - cost function type, 1-6 (see README.md)
+%   minmax - true to maximize the cost function, false to minimize it
+%   nswaps - number of local search iterations
+%
+% Reads data/raw_image_data.mat. If that file is missing, autoart.m
+% rebuilds it from the 306 raw tile PNGs in data/raw_images/. If that
+% folder is missing or empty, autoart.m downloads them first with
+% downloadRawImages.m (see README.md). Also reads data/poster_idx.mat.
+%
+% Writes the final mosaic image to data/images/. Writes the layout, cost
+% trace, mutation-operator usage counts, and total run time to
+% data/autoresults/. Both folders must exist before this function runs.
+% This function does not create them.
 % -------------------------------------------------------------------------
 function autoart(nseed,ftype,minmax,nswaps)
 
@@ -18,8 +40,8 @@ I = I(:,3);
 nfigs = length(I);
 nimgrow = 18; % Number of images per row
 nimgcol = 17; % Number of images per col
-nrowfig = 520; % Number of cols per image
-ncolfig = 590; % Number of rows per image
+nrowfig = 520; % Number of rows per image
+ncolfig = 590; % Number of cols per image
 Nrow = nimgrow*nrowfig; % Number of rows in the final figure
 Ncol = nimgcol*ncolfig; % Number of cols in the final figure
 X = reshape(I,nimgrow,nimgcol);
@@ -37,7 +59,10 @@ if exist([datadir 'raw_image_data.mat'],'file')==2
     Pr_PRIM = getfromfile([datadir 'raw_image_data.mat'],'Pr_PRIM');
     I_PRIM = getfromfile([datadir 'raw_image_data.mat'],'I_PRIM');
 else
-    rawimgdir = 'C:\Users\mariom1\OneDrive - The University of Melbourne\Documents\Research Files\Posters\NewBBOBInstances\';
+    rawimgdir = [datadir 'raw_images/'];
+    if ~exist(rawimgdir,'dir') || isempty(dir([rawimgdir '*.png']))
+        downloadRawImages(rawimgdir);
+    end
     [IMGTC,IMGIND,IMGBIN,PRIM,PATT,Pr_PRIM,I_PRIM] = genRawData(rawimgdir);
     save([datadir 'raw_image_data.mat'],'IMGTC','IMGIND','IMGBIN','PRIM','PATT','Pr_PRIM','I_PRIM');
 end
@@ -104,11 +129,12 @@ end
 
 imshow(rendercolor(X));
 print(gcf,'-dpng',[imagedir 'autoart_S' num2str(nseed) '_E' num2str(ftype) '_M' num2str(minmax) '.png']);
+ttcomp = toc(etime_exp);
 save([resultdir 'result_S' num2str(nseed) '_E' num2str(ftype) '_M' num2str(minmax) '.mat'],'IMGTC',...
-     'IMGBIN','X','J','neffops','nops');
+     'IMGBIN','X','J','neffops','nops','ttcomp');
 
 disp('-------------------------------------------------------------------------');
-disp(['-> Total elapsed time: ' num2str(toc(etime_exp),'%.2f\n')]);
+disp(['-> Total elapsed time: ' num2str(ttcomp,'%.2f\n')]);
 disp('-------------------------------------------------------------------------');
 
 warning('on','images:initSize:adjustingMag');

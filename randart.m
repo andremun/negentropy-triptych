@@ -1,20 +1,38 @@
 % -------------------------------------------------------------------------
-% autoart.m
+% randart.m
+%
+% Evaluates cost function type 6 (primitive pattern match) on a set of
+% pre-generated random layouts. collectResultsPaper.m uses these values
+% as the random baseline. It compares this baseline against the
+% optimized layouts from autoart.m.
+%
+% Inputs:
+%   datadir - folder holding raw_image_data.mat, the 306 tile images in
+%             the same format data/raw_image_data.mat in this
+%             repository uses. collectResultsPaper.m calls this
+%             function with datadir set to data/rndresults/, so that
+%             folder needs its own copy of raw_image_data.mat.
+%   idx     - matrix of layouts, one 306-element layout per column
+%   J       - matrix of cost values to fill in. randart leaves an entry
+%             already set (not NaN) unchanged, and skips it
+%
+% Output:
+%   J - the input matrix. Row 6 now holds a value for every column that
+%       was still NaN
 % -------------------------------------------------------------------------
-function J = randart(idx,J)
+function J = randart(datadir,idx,J)
 
 global IMGBIN IMGIND PRIM PATT Pr_PRIM I_PRIM fcntype data Hx
 
 disp('-------------------------------------------------------------------------');
 disp('-> Initializing ');
-datadir = './data/';
 
 warning('off','images:initSize:adjustingMag');
 artworkfcn;
 
 [nfigs,ntries] = size(idx);
-nrowfig = 520; % Number of cols per image
-ncolfig = 590; % Number of rows per image
+nrowfig = 520; % Number of rows per image
+ncolfig = 590; % Number of cols per image
 nimgrow = 18; % Number of images per row
 nimgcol = 17; % Number of images per col
 Nrow = nimgrow*nrowfig; % Number of rows in the final figure
