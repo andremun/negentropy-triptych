@@ -185,9 +185,11 @@ layout, cost trace, mutation-operator usage counts, and total run time
 Evaluate cost function type 6 on random layouts:
 
 ```matlab
-randart(idx, J)
+randart(datadir, idx, J)
 ```
 
+- `datadir`: folder holding a copy of `raw_image_data.mat`. For a
+  direct call against this repository's own data, use `'./data/'`.
 - `idx`: matrix of layouts, one per column.
 - `J`: matrix of cost values to fill in. `randart` skips any entry that
   is not `NaN`.
@@ -198,6 +200,13 @@ baseline, and produces the figures for [1]: two example test-function
 landscapes, the triptych, all 24 primitive-pattern illustrations, the
 extreme-cost mosaics, the cost distribution histograms, and the
 convergence curves.
+
+If `data/result_randart.mat` is missing, `collectResultsPaper.m`
+rebuilds it by calling `randart` on 1e6 random layouts. That path needs
+a copy of `data/raw_image_data.mat` at
+`data/rndresults/raw_image_data.mat`. `data/result_randart.mat` already
+exists on the repository owner's machine, so a normal run for them never
+takes this path.
 
 ### Running on a SLURM cluster
 

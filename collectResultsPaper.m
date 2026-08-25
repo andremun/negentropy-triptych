@@ -12,10 +12,8 @@
 % .mat files autoart.m writes to data/autoresults/, including the
 % ttcomp field autoart.m now saves. If data/result_randart.mat or
 % data/result_autoart.mat is missing, this script tries to rebuild it.
-% Rebuilding data/result_randart.mat calls randart.m with a
-% three-argument signature that the randart.m in this repository does
-% not have. See
-% https://github.com/andremun/negentropy-triptych/issues/1 for details.
+% Rebuilding data/result_randart.mat calls randart.m, and needs a copy
+% of data/raw_image_data.mat at data/rndresults/raw_image_data.mat.
 % -------------------------------------------------------------------------
 
 %% Set up the environment
