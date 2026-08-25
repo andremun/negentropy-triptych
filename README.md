@@ -55,20 +55,25 @@ improves the chosen cost function. The seven moves are:
 
 ```
 negentropy-triptych/
-├── autoart.m               Local search that optimizes one mosaic layout
-├── randart.m                Evaluates the cost function on random layouts
-├── artworkfcn.m              Shared helper functions (see below)
-├── downloadRawImages.m        Fetches the 306 tile PNGs from figshare
-├── kdpee.m                    Third-party k-d partitioning entropy estimator
-├── kdpeemex.mexw64            Compiled MEX binary kdpee.m calls (Windows only)
-├── collectResultsPaper.m  Post-processing script that builds the paper figures
-├── trial_autoart.m        SLURM array-job wrapper around autoart.m
-├── trial_rnd_mosaic.m     SLURM array-job wrapper for random-mosaic evaluation
+├── autoart.m                    Local search that optimizes one mosaic layout
+├── randart.m                     Evaluates the cost function on random layouts
+├── artworkfcn.m                   Shared helper functions (see below)
+├── downloadRawImages.m             Fetches the 306 tile PNGs from figshare
+├── kdpee.m                         Third-party k-d partitioning entropy estimator
+├── kdpeemex.mexw64                 Compiled MEX binary kdpee.m calls (Windows)
+├── kdpeemex.mexa64                 Compiled MEX binary kdpee.m calls (Linux)
+├── kdpee/                          Vendored kdpee C source, for other platforms
+├── collectResultsPaper.m       Post-processing script that builds the paper figures
+├── trial_autoart.m             SLURM array-job wrapper around autoart.m
+├── trial_rnd_mosaic.m          SLURM array-job wrapper for random-mosaic evaluation
+├── test_random_mosaics_clust.m   Cost function type 4 evaluator trial_rnd_mosaic.m calls
+├── launch_autoart.sh            SLURM sbatch script that runs trial_autoart.m
+├── launch_randart.sh            SLURM sbatch script for the random-mosaic baseline
 └── data/
-    ├── poster_idx.mat        Starting layouts used for the printed poster
-    ├── raw_image_data.mat    Cached tile images, binary masks, and primitive data
-    ├── result_triptych.mat   Layouts and cost values for the published triptych
-    └── raw_images/           306 raw tile PNGs (not committed, see Data below)
+    ├── poster_idx.mat             Starting layouts used for the printed poster
+    ├── raw_image_data.mat         Cached tile images, binary masks, and primitive data
+    ├── result_triptych.mat        Layouts and cost values for the published triptych
+    └── raw_images/                306 raw tile PNGs (not committed, see Data below)
 ```
 
 `artworkfcn.m` is not called directly. It defines the functions the other
@@ -89,13 +94,16 @@ scripts use, and injects them into the caller workspace with `assignin`.
 
 - MATLAB with the Image Processing Toolbox (`rgb2ind`, `regionprops`,
   `bwareafilt`) and the Statistics and Machine Learning Toolbox (`nanmean`).
-- `kdpeemex.mexw64`, a compiled MEX binary for the k-d partitioning entropy
-  estimator [4]. It runs on 64-bit Windows only. Cost function types 1
-  and 2 (see Usage) call it through `kdpee.m`. The other cost function
-  types do not need it. To run those two cost functions on macOS or
-  Linux, get the `kdpee` C source from its author. Compile a MEX file
-  for your platform.
-- A SLURM cluster, only for `trial_autoart.m` and `trial_rnd_mosaic.m`,
+- A compiled MEX binary for the k-d partitioning entropy estimator [4].
+  This repository ships `kdpeemex.mexw64` (Windows) and `kdpeemex.mexa64`
+  (Linux). MATLAB picks the one that matches your platform automatically.
+  Cost function types 1 and 2 (see Usage) call it through `kdpee.m`. The
+  other cost function types do not need it. On macOS or another Linux
+  architecture, build your own MEX file. Run `kdpee/mat_oct/mexme.m`
+  from inside `kdpee/mat_oct/`. Copy the resulting `kdpeemex.mex*` file
+  next to `kdpee.m`.
+- A SLURM cluster, only for `trial_autoart.m` and `trial_rnd_mosaic.m`
+  (or their `launch_autoart.sh` and `launch_randart.sh` sbatch wrappers),
   which read the `SLURM_ARRAY_TASK_ID` environment variable.
 - Internet access, only the first time `data/raw_image_data.mat` needs to
   be rebuilt, so `downloadRawImages.m` can reach the figshare API. Needs
@@ -186,6 +194,30 @@ cell. It loads the results from the local search runs and the random
 baseline, and produces the figures for [1]: the triptych, the primitive
 and pattern illustrations, the extreme-cost mosaics, and the cost
 distribution histograms.
+
+### Running on a SLURM cluster
+
+Submit the local search array job with `sbatch launch_autoart.sh`. It
+runs `trial_autoart.m` (see Reproducibility below).
+
+Submit the random-mosaic baseline array job with `sbatch
+launch_randart.sh`. It runs `trial_rnd_mosaic.m`, which in turn calls
+`test_random_mosaics_clust.m`. `test_random_mosaics_clust.m` expects
+`imagedata.mat` in its working folder. That file holds the same binary
+tile masks as `data/raw_image_data.mat` in this repository, under the
+historical flat filename this function expects.
+
+`launch_randart.sh` itself still names an older script,
+`trial_randart.m`, which is not in this repository. `trial_rnd_mosaic.m`
+looks like its likely successor: both chunk the same 1e6 layouts into
+1000-layout slices across a 1000-task array, and both call
+`test_random_mosaics_clust.m`. This is not confirmed. See
+https://github.com/andremun/negentropy-triptych/issues/1.
+
+Both scripts assume a folder layout from the original cluster run. Edit
+the paths inside them before you submit either job. Change `cd
+~/MATLAB/autoart` in the `.sh` files. Change the `data/...` paths inside
+the `.m` files to match your own setup.
 
 ## Reproducibility
 
