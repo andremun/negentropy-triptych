@@ -23,6 +23,20 @@
 % data/autoresults/. Both folders must exist before this function runs.
 % This function does not create them.
 % -------------------------------------------------------------------------
+%
+% Copyright (c) 2026 Mario Andres Munoz Acosta
+% The University of Melbourne
+%
+% Date: August 2026
+%
+% This software is licensed under the PolyForm Noncommercial License 1.0.0.
+% You may use, copy, modify, and distribute this software for any
+% non-commercial purpose. Commercial use is prohibited.
+% Full license text: https://polyformproject.org/licenses/noncommercial/1.0.0
+%
+% Required Notice: Copyright (c) 2026 Mario Andres Munoz Acosta
+%                  The University of Melbourne
+% -------------------------------------------------------------------------
 function autoart(nseed,ftype,minmax,nswaps)
 
 global IMGTC IMGBIN IMGIND PRIM PATT Pr_PRIM I_PRIM fcntype data Hx

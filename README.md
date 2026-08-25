@@ -55,6 +55,7 @@ improves the chosen cost function. The seven moves are:
 
 ```
 negentropy-triptych/
+├── LICENSE                      PolyForm Noncommercial License 1.0.0 (see below)
 ├── autoart.m                    Local search that optimizes one mosaic layout
 ├── randart.m                     Evaluates the cost function on random layouts
 ├── artworkfcn.m                   Shared helper functions (see below)
@@ -277,3 +278,11 @@ estimation by k-d partitioning. *IEEE Signal Processing Letters*, 16(6),
 537-540. Implementation: https://github.com/danstowell/kdpee. Released
 under the GNU General Public License. See the header of `kdpee.m` for the
 license text and terms.
+
+## License
+
+The code in this repository is licensed under the PolyForm Noncommercial
+License 1.0.0. See `LICENSE` for the full text. This covers everything
+except `kdpee.m`, `kdpeemex.mexw64`, `kdpeemex.mexa64`, and everything
+under `kdpee/`, which stay under their own GNU General Public License,
+version 3 (see `kdpee/COPYING`).

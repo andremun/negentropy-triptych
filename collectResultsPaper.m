@@ -15,6 +15,20 @@
 % Rebuilding data/result_randart.mat calls randart.m, and needs a copy
 % of data/raw_image_data.mat at data/rndresults/raw_image_data.mat.
 % -------------------------------------------------------------------------
+%
+% Copyright (c) 2026 Mario Andres Munoz Acosta
+% The University of Melbourne
+%
+% Date: August 2026
+%
+% This software is licensed under the PolyForm Noncommercial License 1.0.0.
+% You may use, copy, modify, and distribute this software for any
+% non-commercial purpose. Commercial use is prohibited.
+% Full license text: https://polyformproject.org/licenses/noncommercial/1.0.0
+%
+% Required Notice: Copyright (c) 2026 Mario Andres Munoz Acosta
+%                  The University of Melbourne
+% -------------------------------------------------------------------------
 
 %% Set up the environment
 global IMGTC IMGBIN IMGIND PRIM PATT Pr_PRIM I_PRIM
