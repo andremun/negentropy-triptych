@@ -176,8 +176,8 @@ autoart(nseed, ftype, minmax, nswaps)
 | 6 | Mean best match between each 2x2 block of tiles and the primitive pattern table |
 
 `autoart.m` saves the final mosaic image to `data/images/`. It saves the
-layout, cost trace, and mutation-operator usage counts to
-`data/autoresults/`.
+layout, cost trace, mutation-operator usage counts, and total run time
+(`ttcomp`) to `data/autoresults/`.
 
 Evaluate cost function type 6 on random layouts:
 
@@ -191,9 +191,10 @@ randart(idx, J)
 
 `collectResultsPaper.m` is not a function. It is a script you run cell by
 cell. It loads the results from the local search runs and the random
-baseline, and produces the figures for [1]: the triptych, the primitive
-and pattern illustrations, the extreme-cost mosaics, and the cost
-distribution histograms.
+baseline, and produces the figures for [1]: two example test-function
+landscapes, the triptych, all 24 primitive-pattern illustrations, the
+extreme-cost mosaics, the cost distribution histograms, and the
+convergence curves.
 
 ### Running on a SLURM cluster
 

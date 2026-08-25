@@ -19,9 +19,9 @@
 % downloadRawImages.m (see README.md). Also reads data/poster_idx.mat.
 %
 % Writes the final mosaic image to data/images/. Writes the layout, cost
-% trace, and mutation-operator usage counts to data/autoresults/. Both
-% folders must exist before this function runs. This function does not
-% create them.
+% trace, mutation-operator usage counts, and total run time to
+% data/autoresults/. Both folders must exist before this function runs.
+% This function does not create them.
 % -------------------------------------------------------------------------
 function autoart(nseed,ftype,minmax,nswaps)
 
@@ -129,11 +129,12 @@ end
 
 imshow(rendercolor(X));
 print(gcf,'-dpng',[imagedir 'autoart_S' num2str(nseed) '_E' num2str(ftype) '_M' num2str(minmax) '.png']);
+ttcomp = toc(etime_exp);
 save([resultdir 'result_S' num2str(nseed) '_E' num2str(ftype) '_M' num2str(minmax) '.mat'],'IMGTC',...
-     'IMGBIN','X','J','neffops','nops');
+     'IMGBIN','X','J','neffops','nops','ttcomp');
 
 disp('-------------------------------------------------------------------------');
-disp(['-> Total elapsed time: ' num2str(toc(etime_exp),'%.2f\n')]);
+disp(['-> Total elapsed time: ' num2str(ttcomp,'%.2f\n')]);
 disp('-------------------------------------------------------------------------');
 
 warning('on','images:initSize:adjustingMag');
