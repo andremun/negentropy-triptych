@@ -23,6 +23,20 @@
 %   J - the input vector, with a value for every entry that was still
 %       NaN
 % -------------------------------------------------------------------------
+%
+% Copyright (c) 2026 Mario Andres Munoz Acosta
+% The University of Melbourne
+%
+% Date: August 2026
+%
+% This software is licensed under the PolyForm Noncommercial License 1.0.0.
+% You may use, copy, modify, and distribute this software for any
+% non-commercial purpose. Commercial use is prohibited.
+% Full license text: https://polyformproject.org/licenses/noncommercial/1.0.0
+%
+% Required Notice: Copyright (c) 2026 Mario Andres Munoz Acosta
+%                  The University of Melbourne
+% -------------------------------------------------------------------------
 function J = test_random_mosaics_clust(datadir,idx,J)
 
 warning('off','images:initSize:adjustingMag');

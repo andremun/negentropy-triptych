@@ -20,6 +20,20 @@
 %   J - the input matrix. Row 6 now holds a value for every column that
 %       was still NaN
 % -------------------------------------------------------------------------
+%
+% Copyright (c) 2026 Mario Andres Munoz Acosta
+% The University of Melbourne
+%
+% Date: August 2026
+%
+% This software is licensed under the PolyForm Noncommercial License 1.0.0.
+% You may use, copy, modify, and distribute this software for any
+% non-commercial purpose. Commercial use is prohibited.
+% Full license text: https://polyformproject.org/licenses/noncommercial/1.0.0
+%
+% Required Notice: Copyright (c) 2026 Mario Andres Munoz Acosta
+%                  The University of Melbourne
+% -------------------------------------------------------------------------
 function J = randart(datadir,idx,J)
 
 global IMGBIN IMGIND PRIM PATT Pr_PRIM I_PRIM fcntype data Hx
