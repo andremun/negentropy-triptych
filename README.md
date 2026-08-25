@@ -68,7 +68,10 @@ negentropy-triptych/
 ├── trial_rnd_mosaic.m          SLURM array-job wrapper for random-mosaic evaluation
 ├── test_random_mosaics_clust.m   Cost function type 4 evaluator trial_rnd_mosaic.m calls
 ├── launch_autoart.sh            SLURM sbatch script that runs trial_autoart.m
-├── launch_randart.sh            SLURM sbatch script for the random-mosaic baseline
+├── launch_job_exec.sh            SLURM sbatch script that runs trial_rnd_mosaic.m
+├── launch_randart.sh            Historical sbatch script naming a missing trial_randart.m
+├── autoart_1e6_cost/              Inputs for the 1e6-layout random-mosaic experiment
+│   └── result_gen_rand_mosaics_E0.mat   Precomputed baseline trial_rnd_mosaic.m reads
 └── data/
     ├── poster_idx.mat             Starting layouts used for the printed poster
     ├── raw_image_data.mat         Cached tile images, binary masks, and primitive data
@@ -103,8 +106,8 @@ scripts use, and injects them into the caller workspace with `assignin`.
   from inside `kdpee/mat_oct/`. Copy the resulting `kdpeemex.mex*` file
   next to `kdpee.m`.
 - A SLURM cluster, only for `trial_autoart.m` and `trial_rnd_mosaic.m`
-  (or their `launch_autoart.sh` and `launch_randart.sh` sbatch wrappers),
-  which read the `SLURM_ARRAY_TASK_ID` environment variable.
+  (or their `launch_autoart.sh` and `launch_job_exec.sh` sbatch
+  wrappers), which read the `SLURM_ARRAY_TASK_ID` environment variable.
 - Internet access, only the first time `data/raw_image_data.mat` needs to
   be rebuilt, so `downloadRawImages.m` can reach the figshare API. Needs
   no extra toolbox (`webread`/`websave` are base MATLAB).
@@ -202,23 +205,33 @@ Submit the local search array job with `sbatch launch_autoart.sh`. It
 runs `trial_autoart.m` (see Reproducibility below).
 
 Submit the random-mosaic baseline array job with `sbatch
-launch_randart.sh`. It runs `trial_rnd_mosaic.m`, which in turn calls
-`test_random_mosaics_clust.m`. `test_random_mosaics_clust.m` expects
-`imagedata.mat` in its working folder. That file holds the same binary
-tile masks as `data/raw_image_data.mat` in this repository, under the
-historical flat filename this function expects.
+launch_job_exec.sh`. It runs `trial_rnd_mosaic.m`, which in turn calls
+`test_random_mosaics_clust.m`. Both expect two files in
+`autoart_1e6_cost/` that this repository does not ship:
 
-`launch_randart.sh` itself still names an older script,
-`trial_randart.m`, which is not in this repository. `trial_rnd_mosaic.m`
-looks like its likely successor: both chunk the same 1e6 layouts into
-1000-layout slices across a 1000-task array, and both call
-`test_random_mosaics_clust.m`. This is not confirmed. See
-https://github.com/andremun/negentropy-triptych/issues/1.
+- `img_idx_1e6.mat`, a 435 MB matrix of 1e6 random layouts. It exists on
+  the repository owner's machine but is too large for a normal git
+  commit. GitHub rejects any single file over 100 MB.
+- `imagedata.mat`, holding the same binary tile masks as
+  `data/raw_image_data.mat` in this repository, under the historical
+  flat filename this function expects. Copy or rename a copy of
+  `data/raw_image_data.mat` to `autoart_1e6_cost/imagedata.mat` to
+  supply it.
 
-Both scripts assume a folder layout from the original cluster run. Edit
-the paths inside them before you submit either job. Change `cd
-~/MATLAB/autoart` in the `.sh` files. Change the `data/...` paths inside
-the `.m` files to match your own setup.
+`result_gen_rand_mosaics_E0.mat`, the third file `trial_rnd_mosaic.m`
+reads, is small enough that this repository does ship it, already in
+`autoart_1e6_cost/`.
+
+This repository also has `launch_randart.sh`, an older sbatch script
+that names a script called `trial_randart.m`, not present anywhere this
+project's history has been checked. `launch_job_exec.sh` is the
+confirmed, current launcher for `trial_rnd_mosaic.m`. Treat
+`launch_randart.sh` as historical.
+
+All three sbatch scripts assume a folder layout from the original
+cluster run. Edit the paths inside them before you submit any job.
+Change `cd ~/MATLAB/autoart` in the `.sh` files. Change the `data/...`
+paths inside the `.m` files to match your own setup.
 
 ## Reproducibility
 
